@@ -17,7 +17,7 @@ class RiskyServiceIntegrationTest {
 
     @Test
     void riskyMethod_ShouldLogErrorAndThrow() {
-        assertThatThrownBy(() -> riskyService.riskyMethod())
+        assertThatThrownBy(() -> riskyService.riskyMethodError())
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("TestError");
     }

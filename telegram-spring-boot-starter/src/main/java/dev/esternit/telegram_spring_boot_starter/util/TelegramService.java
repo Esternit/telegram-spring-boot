@@ -34,8 +34,8 @@ public class TelegramService {
      * @param text message
      * @return true if message was sent
      */
-    public boolean sendError(String text, String parseMode) {
-        return sendMessage(errorChatId, text, parseMode);
+    public boolean sendError(String text, String parseMode, String chatId) {
+        return sendMessage(chatId == null ? errorChatId : chatId, text, parseMode);
     }
 
     /**

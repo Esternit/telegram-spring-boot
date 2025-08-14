@@ -24,7 +24,7 @@ public class TelegramAutoConfiguration {
     private static final Logger log = LoggerFactory.getLogger(TelegramAutoConfiguration.class);
 
     public TelegramAutoConfiguration() {
-        log.info("✅ [TelegramAutoConfiguration] is enabled");
+        log.info("TelegramAutoConfiguration is enabled");
     }
 
     @Bean

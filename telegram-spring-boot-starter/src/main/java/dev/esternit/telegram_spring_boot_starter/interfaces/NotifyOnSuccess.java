@@ -5,27 +5,17 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface NotifyOnFailure {
+public @interface NotifyOnSuccess {
 
     /**
-     * Error message
+     * Message
      */
-    String value() default "Method failed with exception";
+    String value() default "Method completed successfully";
 
     /**
-     * Should include stack trace
+     * Should include result
      */
-    boolean includeStackTrace() default false;
-
-    /**
-     * Exception types to notify
-     */
-    Class<? extends Throwable>[] notifyOn() default {};
-
-    /**
-     * Exception types to ignore
-     */
-    Class<? extends Throwable>[] ignore() default {};
+    boolean includeResult() default false;
 
     /**
      * Error severity
