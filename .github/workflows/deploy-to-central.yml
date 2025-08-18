@@ -52,7 +52,9 @@ jobs:
       - name: Change Directory and Build
         run: |
           cd telegram-spring-boot-starter
-          mvn --batch-mode --update-snapshots clean deploy
+          mvn --batch-mode --update-snapshots clean deploy \
+              -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} \
+              -Dgpg.pinentry=loopback
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
