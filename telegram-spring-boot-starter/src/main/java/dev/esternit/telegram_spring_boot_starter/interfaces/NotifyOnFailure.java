@@ -2,6 +2,11 @@ package dev.esternit.telegram_spring_boot_starter.interfaces;
 
 import java.lang.annotation.*;
 
+/**
+ * @author Esternit
+ * @since 0.1.0
+ * Annotation to notify on failure
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
