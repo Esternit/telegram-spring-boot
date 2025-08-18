@@ -4,15 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- Основная информация о проекте -->
-    <groupId>dev.esternit</groupId>
-    <artifactId>telegram-spring-boot-parent</artifactId>
-    <version>0.1.0</version>
-    <packaging>pom</packaging>
-
     <name>Telegram Spring Boot Parent</name>
     <description>Parent POM for Telegram Spring Boot Starter and its tests</description>
-    <url>https://github.com/esternit/telegram-spring-boot</url>
+    <url>https://github.com/Esternit/telegram-spring-boot</url>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -31,102 +25,4 @@
         <module>telegram-spring-boot-starter</module>
         <module>telegram-spring-tests</module>
     </modules>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-web</artifactId>
-                <version>${spring-framework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-webflux</artifactId>
-                <version>${spring-framework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-aop</artifactId>
-                <version>${spring-aop.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.aspectj</groupId>
-                <artifactId>aspectjweaver</artifactId>
-                <version>${aspectj.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.11.0</version>
-                    <configuration>
-                        <source>${maven.compiler.source}</source>
-                        <target>${maven.compiler.target}</target>
-                        <encoding>${project.build.sourceEncoding}</encoding>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.2.5</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.4.0</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
-
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <name>Eskit</name>
-            <email>southonlyyt@gmail.com</email>
-            <organization>esternit</organization>
-            <organizationUrl>https://github.com/esternit</organizationUrl>
-        </developer>
-    </developers>
-
-    <scm>
-        <connection>scm:git:https://github.com/esternit/telegram-spring-boot.git</connection>
-        <developerConnection>scm:git:https://github.com/esternit/telegram-spring-boot.git</developerConnection>
-        <url>https://github.com/esternit/telegram-spring-boot</url>
-        <tag>HEAD</tag>
-    </scm>
-
-    <issueManagement>
-        <system>GitHub Issues</system>
-        <url>https://github.com/esternit/telegram-spring-boot/issues</url>
-    </issueManagement>
 </project>

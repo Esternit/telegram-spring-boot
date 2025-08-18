@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>dev.esternit</groupId>
+		<groupId>io.github.esternit</groupId>
 		<artifactId>telegram-spring-boot-parent</artifactId>
 		<version>0.1.0</version>
 		<relativePath>../pom.xml</relativePath>
@@ -31,7 +31,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>dev.esternit</groupId>
+			<groupId>com.justpari</groupId>
 			<artifactId>telegram-spring-boot-starter</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
