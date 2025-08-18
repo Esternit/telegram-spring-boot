@@ -18,7 +18,19 @@ jobs:
           java-version: 17
           distribution: 'temurin'
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase: GPG_PASSPHRASE
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+      
+      - name: Disable pinentry
+        run: |
+          cat << EOF > ~/.gnupg/gpg-agent.conf
+          allow-loopback-pinentry
+          default-cache-ttl 300
+          max-cache-ttl 7200
+          EOF
+
+          echo "pinentry-program /usr/bin/pinentry-tty" >> ~/.gnupg/gpg-agent.conf
+
+          gpg-connect-agent reloadagent /bye
 
       - name: Cache Maven packages
         uses: actions/cache@v4
