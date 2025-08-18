@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: telegram-spring-tests
+
+telegram:
+  bot:
+    token: token
+    error-chat-id: -1000
