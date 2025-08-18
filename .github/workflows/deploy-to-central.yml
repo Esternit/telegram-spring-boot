@@ -30,6 +30,12 @@ jobs:
       - name: Decrypt settings.xml
         run: |
           echo "${{ secrets.MAVEN_SETTINGS_XML }}" | base64 -d > $HOME/.m2/settings.xml
+        shell: bash
+
+      - name: Validate settings.xml
+        run: |
+          cat $HOME/.m2/settings.xml
+          test -s $HOME/.m2/settings.xml || (echo "ERROR: settings.xml is empty!" && exit 1)
 
       - name: Change Directory and Build
         run: |
