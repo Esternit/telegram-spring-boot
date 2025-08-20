@@ -1,4 +1,4 @@
-package dev.esternit.telegram_spring_boot_starter.util;
+package dev.esternit.telegram_spring_boot_starter.services;
 
 import dev.esternit.telegram_spring_boot_starter.config.TelegramProperties;
 import lombok.Data;

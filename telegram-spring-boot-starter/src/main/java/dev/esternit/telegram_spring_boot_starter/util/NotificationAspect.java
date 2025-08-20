@@ -2,16 +2,13 @@ package dev.esternit.telegram_spring_boot_starter.util;
 
 import dev.esternit.telegram_spring_boot_starter.interfaces.NotifyOnFailure;
 import dev.esternit.telegram_spring_boot_starter.interfaces.NotifyOnSuccess;
+import dev.esternit.telegram_spring_boot_starter.services.TelegramService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 

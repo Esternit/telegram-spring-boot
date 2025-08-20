@@ -1,7 +1,7 @@
 package dev.esternit.telegram_spring_boot_starter.config;
 
 import dev.esternit.telegram_spring_boot_starter.util.NotificationAspect;
-import dev.esternit.telegram_spring_boot_starter.util.TelegramService;
+import dev.esternit.telegram_spring_boot_starter.services.TelegramService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 

@@ -1,0 +1,1 @@
+sourceset_dependencies='{"Telegram Spring Boot Starter/JVM":[]}'
