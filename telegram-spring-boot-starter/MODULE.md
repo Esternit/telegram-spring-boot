@@ -4,7 +4,7 @@
 
 Lightweight Telegram Bot API starter for Spring Boot (HTTP-based, no SDK).
 
-## Описание
+## Description
 
 This library allows you to easily integrate a Telegram bot into a Spring Boot application without using third-party SDKs.
 
@@ -14,7 +14,7 @@ Supports:
 - Error handling via annotations
 - Configuration via `application.yml`
 
-## Пример использования
+## Use case
 
 ```java
 @NotifyOnFailure(
