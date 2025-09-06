@@ -10,6 +10,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+
 	<artifactId>telegram-spring-tests</artifactId>
 	<name>telegram-spring-tests</name>
 	<description>Integration tests for Telegram Spring Boot Starter</description>
@@ -31,9 +32,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.justpari</groupId>
+			<groupId>io.github.esternit</groupId>
 			<artifactId>telegram-spring-boot-starter</artifactId>
-			<version>${parent.version}</version>
+			<version>0.1.1</version>
 		</dependency>
 
 		<dependency>
@@ -48,10 +49,12 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.5.4</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.5.2</version>
 			</plugin>
 		</plugins>
 	</build>

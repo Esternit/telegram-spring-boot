@@ -198,24 +198,15 @@
                         <include>MODULE.md</include>
                         <include>${project.basedir}/src/main/java/dev/esternit/telegram_spring_boot_starter/services/package.md</include>
                     </includes>
-
-                    <pluginsConfiguration>
-                        <org.jetbrains.dokka.html.HtmlPluginConfig>
-                            <separateInheritedMembers>true</separateInheritedMembers>
-                            <footer>
-                                <![CDATA[
-                    <p>© 2024 <a href="https://github.com/esternit">Esternit</a>. Licensed under
-                    <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a>.</p>
-                    ]]>
-                            </footer>
-                        </org.jetbrains.dokka.html.HtmlPluginConfig>
-                    </pluginsConfiguration>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>3.2.0</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>

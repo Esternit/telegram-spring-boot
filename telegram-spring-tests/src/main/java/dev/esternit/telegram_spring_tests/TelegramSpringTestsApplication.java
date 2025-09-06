@@ -14,6 +14,7 @@ public class TelegramSpringTestsApplication {
 
 		RiskyService riskyService = ctx.getBean(RiskyService.class);
 		riskyService.riskyMethodError();
+		riskyService.riskyMethodError();
 
 		ctx.close();
 	}

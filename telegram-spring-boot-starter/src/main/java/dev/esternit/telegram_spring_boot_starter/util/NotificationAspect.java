@@ -2,6 +2,7 @@ package dev.esternit.telegram_spring_boot_starter.util;
 
 import dev.esternit.telegram_spring_boot_starter.interfaces.NotifyOnFailure;
 import dev.esternit.telegram_spring_boot_starter.interfaces.NotifyOnSuccess;
+import dev.esternit.telegram_spring_boot_starter.services.AsyncTelegramNotifier;
 import dev.esternit.telegram_spring_boot_starter.services.TelegramService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -16,15 +17,25 @@ import java.util.Arrays;
 @Slf4j
 public class NotificationAspect {
 
-    private final TelegramService telegramService;
+    private final NotificationThrottler throttler;
+    private final AsyncTelegramNotifier asyncNotifier;
 
-    public NotificationAspect(TelegramService telegramService) {
-        this.telegramService = telegramService;
+    public NotificationAspect(NotificationThrottler throttler,
+                              AsyncTelegramNotifier asyncNotifier) {
+        this.throttler = throttler;
+        this.asyncNotifier = asyncNotifier;
     }
 
     @Around("@annotation(notifyOnFailure)")
     public Object notifyOnFailure(ProceedingJoinPoint joinPoint, NotifyOnFailure notifyOnFailure) throws Throwable {
         log.debug("🔔 AOP: Entering @NotifyOnFailure for {}", joinPoint.getSignature().toShortString());
+        String methodKey = joinPoint.getSignature().toShortString();
+
+        if (!throttler.canNotify(methodKey, notifyOnFailure.cooldownSeconds())) {
+            log.debug("🔔 AOP: failure throttling for {}", methodKey);
+            return joinPoint.proceed();
+        }
+
 
         try {
             return joinPoint.proceed();
@@ -43,7 +54,7 @@ public class NotificationAspect {
                     notifyOnFailure.includeStackTrace()
             );
 
-            sendMessage(fullMessage, notifyOnFailure.severity(), notifyOnFailure.chatId());
+            asyncNotifier.sendFailureNotification(fullMessage, notifyOnFailure.severity(), notifyOnFailure.chatId());
             throw ex;
         }
     }
@@ -53,6 +64,13 @@ public class NotificationAspect {
             returning = "result"
     )
     public void notifyOnSuccess(JoinPoint joinPoint, NotifyOnSuccess notifyOnSuccess, Object result) {
+        String methodKey = joinPoint.getSignature().toShortString();
+
+        if (!throttler.canNotify(methodKey, notifyOnSuccess.cooldownSeconds())) {
+            log.debug("🔔 AOP: success throttling for {}", methodKey);
+            return;
+        }
+
         String method = joinPoint.getSignature().toShortString();
         String message = notifyOnSuccess.value().isEmpty() ? "Method succeeded" : notifyOnSuccess.value();
 
@@ -62,7 +80,7 @@ public class NotificationAspect {
                 notifyOnSuccess.includeResult() ? result : null
         );
 
-        sendMessage(fullMessage, notifyOnSuccess.severity(), notifyOnSuccess.chatId());
+        asyncNotifier.sendSuccessNotification(fullMessage, notifyOnSuccess.severity(), notifyOnSuccess.chatId());
     }
 
     private boolean shouldNotifyException(Throwable ex, NotifyOnFailure notify) {
@@ -75,19 +93,5 @@ public class NotificationAspect {
         Class<? extends Throwable>[] ignore = notify.ignore();
         return Arrays.stream(ignore)
                 .noneMatch(clazz -> clazz.isAssignableFrom(ex.getClass()));
-    }
-
-    private void sendMessage(String message, NotifyOnFailure.Severity severity, String chatId) {
-        boolean sent = telegramService.sendError(message, "MarkdownV2", chatId);
-        if (!sent) {
-            log.error("Failed to send failure notification. Severity: {}", severity);
-        }
-    }
-
-    private void sendMessage(String message, NotifyOnSuccess.Severity severity, String chatId) {
-        boolean sent = telegramService.sendError(message, "MarkdownV2", chatId);
-        if (!sent) {
-            log.error("Failed to send success notification. Severity: {}", severity);
-        }
     }
 }

@@ -32,6 +32,11 @@ public @interface NotifyOnSuccess {
      */
     String chatId() default "";
 
+    /**
+     * Cooldown in seconds
+     */
+    int cooldownSeconds() default 60;
+
     enum Severity {
         LOW, NORMAL, HIGH, CRITICAL
     }

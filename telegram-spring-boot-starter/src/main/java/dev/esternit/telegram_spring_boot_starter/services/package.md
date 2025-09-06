@@ -1,4 +1,4 @@
-# Package dev.esternit.telegram_spring_boot_starter.services
+# Package Services
 
 ## Telegram Methods Implementation
 
