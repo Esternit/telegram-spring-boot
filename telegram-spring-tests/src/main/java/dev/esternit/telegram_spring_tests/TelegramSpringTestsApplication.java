@@ -13,8 +13,10 @@ public class TelegramSpringTestsApplication {
 		ConfigurableApplicationContext ctx = SpringApplication.run(TelegramSpringTestsApplication.class, args);
 
 		RiskyService riskyService = ctx.getBean(RiskyService.class);
-		riskyService.riskyMethodError();
-		riskyService.riskyMethodError();
+//		riskyService.riskyMethodError();
+//		riskyService.riskyMethodError();
+
+		riskyService.sendSomething();
 
 		ctx.close();
 	}

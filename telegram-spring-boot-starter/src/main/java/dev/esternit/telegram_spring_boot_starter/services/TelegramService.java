@@ -1,64 +1,53 @@
 package dev.esternit.telegram_spring_boot_starter.services;
 
 import dev.esternit.telegram_spring_boot_starter.config.TelegramProperties;
-import lombok.Data;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import dev.esternit.telegram_spring_boot_starter.entities.SendMessageParams;
+import dev.esternit.telegram_spring_boot_starter.entities.TelegramResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
-import java.util.Objects;
+import java.util.List;
 
-@Data
+@Slf4j
 public class TelegramService {
-
-    private static final Logger log = LoggerFactory.getLogger(TelegramService.class);
 
     private final RestTemplate restTemplate;
     private final String token;
     private final String apiUrl;
-    private final String errorChatId;
+    private final String defaultChatId;
 
     public TelegramService(TelegramProperties properties, RestTemplateBuilder builder) {
         this.token = properties.getToken();
         this.apiUrl = String.format(properties.getApiUrl(), token);
         this.restTemplate = builder.build();
-        this.errorChatId = properties.getErrorChatId();
+        this.defaultChatId = properties.getErrorChatId();
     }
 
     /**
-     * Send error message to Telegram
-     *
-     * @param text message
-     * @return true if message was sent
+     * Send message to chat (<a href="https://core.telegram.org/bots/api#sendmessage">Docs</a>)
      */
-    public boolean sendError(String text, String parseMode, String chatId) {
-        return sendMessage(chatId == null ? errorChatId : chatId, text, parseMode);
-    }
-
-    /**
-     * Send message to Telegram
-     *
-     * @param chatId chat id
-     * @param text   message
-     * @return true if message was sent
-     */
-    public boolean sendMessage(String chatId, String text, String parseMode) {
+    public boolean sendMessage(SendMessageParams params) {
         try {
-            SendMessageRequest request = new SendMessageRequest();
-            request.chat_id = chatId;
-            request.text = text;
-            if (parseMode != null) {
-                request.parse_mode = parseMode;
+            if (params.getText() == null || params.getText().isEmpty()) {
+                log.warn("Message text is empty or null");
+                return false;
+            }
+            if (params.getText().length() > 4096) {
+                log.warn("Message too long ({} chars), truncated", params.getText().length());
+                params.setText(params.getText().substring(0, 4096));
+            }
+
+            if ("MarkdownV2".equals(params.getParseMode())) {
+                params.setText(params.getText());
             }
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+            headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
-            HttpEntity<SendMessageRequest> entity = new HttpEntity<>(request, headers);
+            HttpEntity<SendMessageParams> entity = new HttpEntity<>(params, headers);
 
             ResponseEntity<TelegramResponse> response = restTemplate.postForEntity(
                     apiUrl,
@@ -66,28 +55,37 @@ public class TelegramService {
                     TelegramResponse.class
             );
 
-            boolean success = response.getStatusCode() == HttpStatus.OK && Boolean.TRUE.equals(Objects.requireNonNull(response.getBody()).ok);
+            boolean success = response.getStatusCode().is2xxSuccessful() && response.getBody() != null && Boolean.TRUE.equals(response.getBody().isOk());
+
             if (!success) {
-                log.warn("Telegram API error: {}", response.getBody());
+                String errorCode = response.getBody() != null ? String.valueOf(response.getBody().getErrorCode()) : "N/A";
+                String description = response.getBody() != null ? response.getBody().getDescription() : "No description";
+                log.warn("Telegram API error [{}]: {}", errorCode, description);
             }
+
             return success;
+
         } catch (Exception e) {
-            log.error("Failed to send message to Telegram");
+            log.error("Unexpected error while sending Telegram message", e);
             return false;
         }
     }
 
-    @Data
-    private static class SendMessageRequest {
-        public String chat_id;
-        public String text;
-        public String parse_mode;
+    /**
+     * Low-level API call
+     */
+    public boolean sendMessage(String chatId, String text, String parseMode) {
+        SendMessageParams params = new SendMessageParams();
+        params.setChatId(chatId != null ? chatId : defaultChatId);
+        params.setText(text);
+        params.setParseMode(parseMode);
+        return sendMessage(params);
     }
 
-    @Data
-    private static class TelegramResponse {
-        public Boolean ok;
-        public Integer error_code;
-        public String description;
+    /**
+     * Low-level error API call
+     */
+    public boolean sendError(String text, String parseMode, String chatId) {
+        return sendMessage(chatId != null ? chatId : defaultChatId, text, parseMode);
     }
 }

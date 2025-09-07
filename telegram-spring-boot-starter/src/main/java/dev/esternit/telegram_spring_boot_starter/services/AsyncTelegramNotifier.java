@@ -17,15 +17,15 @@ public class AsyncTelegramNotifier {
     public void sendFailureNotification(String message, NotifyOnFailure.Severity severity, String chatId) {
         boolean sent = telegramService.sendError(message, "MarkdownV2", chatId);
         if (!sent) {
-            log.error("Failed to send failure notification. Severity: {}", severity);
+            log.error("Failed to send FAILURE notification. Severity: {}", severity);
         }
     }
 
     @Async("telegramNotificationExecutor")
     public void sendSuccessNotification(String message, NotifyOnSuccess.Severity severity, String chatId) {
-        boolean sent = telegramService.sendError(message, "MarkdownV2", chatId);
+        boolean sent = telegramService.sendMessage(chatId, message, "MarkdownV2");
         if (!sent) {
-            log.error("Failed to send success notification. Severity: {}", severity);
+            log.error("Failed to send SUCCESS notification. Severity: {}", severity);
         }
     }
 }
