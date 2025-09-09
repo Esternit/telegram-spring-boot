@@ -17,7 +17,7 @@ public class TelegramProperties {
     /**
      * Base URL for Telegram API
      */
-    private String apiUrl = "https://api.telegram.org/bot%s/sendMessage";
+    private String apiUrl = "https://api.telegram.org/bot%s";
 
     /**
      * Chat id for errors

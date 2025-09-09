@@ -1,6 +1,7 @@
 package dev.esternit.telegram_spring_tests;
 
 import dev.esternit.telegram_spring_boot_starter.entities.SendMessageParams;
+import dev.esternit.telegram_spring_boot_starter.entities.User;
 import dev.esternit.telegram_spring_boot_starter.interfaces.NotifyOnFailure;
 import dev.esternit.telegram_spring_boot_starter.interfaces.NotifyOnSuccess;
 import dev.esternit.telegram_spring_boot_starter.services.TelegramService;
@@ -50,5 +51,11 @@ public class RiskyService {
         } else {
             System.out.println("❌ Failed to send message.");
         }
+    }
+
+    public void getMe(){
+        User user = telegramService.getMe();
+
+        System.out.println(user.getId());
     }
 }

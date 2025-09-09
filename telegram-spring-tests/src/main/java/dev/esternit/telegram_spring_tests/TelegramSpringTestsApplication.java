@@ -16,7 +16,9 @@ public class TelegramSpringTestsApplication {
 //		riskyService.riskyMethodError();
 //		riskyService.riskyMethodError();
 
-		riskyService.sendSomething();
+//		riskyService.sendSomething();
+
+		riskyService.getMe();
 
 		ctx.close();
 	}

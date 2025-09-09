@@ -3,8 +3,10 @@ package dev.esternit.telegram_spring_boot_starter.services;
 import dev.esternit.telegram_spring_boot_starter.config.TelegramProperties;
 import dev.esternit.telegram_spring_boot_starter.entities.SendMessageParams;
 import dev.esternit.telegram_spring_boot_starter.entities.TelegramResponse;
+import dev.esternit.telegram_spring_boot_starter.entities.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -49,10 +51,11 @@ public class TelegramService {
 
             HttpEntity<SendMessageParams> entity = new HttpEntity<>(params, headers);
 
-            ResponseEntity<TelegramResponse> response = restTemplate.postForEntity(
-                    apiUrl,
+            ResponseEntity<TelegramResponse<Object>> response = restTemplate.exchange(
+                    apiUrl + "/sendMessage",
+                    HttpMethod.POST,
                     entity,
-                    TelegramResponse.class
+                    new ParameterizedTypeReference<TelegramResponse<Object>>() {}
             );
 
             boolean success = response.getStatusCode().is2xxSuccessful() && response.getBody() != null && Boolean.TRUE.equals(response.getBody().isOk());
@@ -87,5 +90,32 @@ public class TelegramService {
      */
     public boolean sendError(String text, String parseMode, String chatId) {
         return sendMessage(chatId != null ? chatId : defaultChatId, text, parseMode);
+    }
+
+    /**
+     * Get basic information about the bot in form of a User object.
+     * See: https://core.telegram.org/bots/api#getme
+     */
+    public User getMe() {
+        try {
+            ResponseEntity<TelegramResponse<User>> response = restTemplate.exchange(
+                    apiUrl + "/getMe",
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<TelegramResponse<User>>() {}
+            );
+
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null && Boolean.TRUE.equals(response.getBody().isOk())) {
+                return response.getBody().getResult();
+            } else {
+                String errorCode = response.getBody() != null ? String.valueOf(response.getBody().getErrorCode()) : "N/A";
+                String description = response.getBody() != null ? response.getBody().getDescription() : "No description";
+                log.warn("Telegram API error [{}]:{}", errorCode, description);
+                return null;
+            }
+        } catch (Exception e) {
+            log.error("Unexpected error while calling getMe", e);
+            return null;
+        }
     }
 }
